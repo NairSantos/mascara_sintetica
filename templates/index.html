@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Máscara Sintética</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f6f8fa;
+    color: #222;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    background: #0078d4;
+    color: white;
+    padding: 15px;
+    text-align: center;
+  }
+  main {
+    padding: 20px;
+  }
+  button {
+    background: #0078d4;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    margin: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  button:hover {
+    background: #005fa3;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: white;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 6px;
+    text-align: center;
+  }
+  th {
+    background: #eee;
+  }
+  tr.synthetic {
+    background: #e8f5e9;
+  }
+  #status {
+    margin-top: 15px;
+    font-weight: bold;
+    color: #333;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h2> Sistema de Máscara Sintética</h2>
+</header>
+
+<main>
+  <div>
+    <button onclick="importSeed()"> Importar Dados Iniciais</button>
+    <button onclick="train()"> Treinar Modelo</button>
+    <button onclick="generate()"> Gerar Sintéticos</button>
+    <button onclick="exportSynthetics()"> Exportar Sintéticos</button>
+    <button onclick="resetDb()"> Resetar Banco</button>
+  </div>
+
+  <table id="tbl">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>CPF</th>
+        <th>Idade</th>
+        <th>Cidade</th>
+        <th>Renda</th>
+        <th>Sintético?</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div id="status">Aguardando ação...</div>
+</main>
+
+<script>
+async function api(url, opts={}) {
+  const r = await fetch(url, opts);
+  return r.json();
+}
+
+async function importSeed(){
+  try{
+    const r = await api('/import_seed',{method:'POST'});
+    showStatus('Importado: ' + JSON.stringify(r));
+    refresh();
+  }catch(e){
+    showStatus('Erro import_seed: '+e);
+  }
+}
+
+async function refresh(){
+  try{
+    const data = await api('/users');
+    const tbody = document.querySelector('#tbl tbody');
+    tbody.innerHTML = '';
+    data.forEach(row=>{
+      const tr = document.createElement('tr');
+      if(row.synthetic==1) tr.classList.add('synthetic');
+      tr.innerHTML = `
+        <td>${row.id}</td>
+        <td>${row.nome}</td>
+        <td>${row.cpf}</td>
+        <td>${row.idade}</td>
+        <td>${row.cidade}</td>
+        <td>${row.renda}</td>
+        <td>${row.synthetic}</td>`;
+      tbody.appendChild(tr);
+    });
+    showStatus('Lista atualizada — registros: '+data.length);
+  }catch(e){
+    showStatus('Erro refresh: '+e);
+  }
+}
+
+async function train(){
+  try{
+    const r = await api('/train', {method:'POST'});
+    showStatus('Treinamento: ' + JSON.stringify(r));
+  }catch(e){
+    showStatus('Erro train: '+e);
+  }
+}
+
+async function generate(){
+  try{
+    const r = await api('/generate', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({n:5})
+    });
+    showStatus('Gerados: ' + (r.generated ? r.generated.length : JSON.stringify(r)));
+    refresh();
+  }catch(e){
+    showStatus('Erro generate: '+e);
+  }
+}
+
+async function exportSynthetics(){
+  try{
+    const r = await api('/export_synthetics', {method:'GET'});
+    if(r.status==='ok' && r.file){
+      showStatus('Exportado para: ' + r.file + ' (linhas: '+r.rows+')');
+    } else {
+      showStatus('Export falhou: ' + JSON.stringify(r));
+    }
+  }catch(e){
+    showStatus('Erro export: '+e);
+  }
+}
+
+async function resetDb(){
+  if(!confirm('ATENÇÃO: Resetar o DB apaga tudo. Deseja continuar?')) return;
+  try{
+    const r = await api('/reset_db', {method:'POST'});
+    showStatus('Reset: ' + JSON.stringify(r));
+  }catch(e){
+    showStatus('Erro reset_db: '+e);
+  }
+}
+
+function showStatus(msg){
+  document.getElementById('status').innerText = msg;
+}
+
+refresh();
+</script>
+</body>
+</html>

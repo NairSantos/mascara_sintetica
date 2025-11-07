@@ -1,0 +1,7 @@
+[
+  {"id": 1, "nome": "Lucas Silva", "cpf": "12345678909", "idade": 28, "cidade": "São Paulo", "renda": 3500.0, "synthetic": 0},
+  {"id": 2, "nome": "Mariana Souza", "cpf": "98765432100", "idade": 34, "cidade": "Campinas", "renda": 4800.0, "synthetic": 0},
+  {"id": 3, "nome": "Pedro Costa", "cpf": "11122233344", "idade": 22, "cidade": "Santos", "renda": 2100.0, "synthetic": 0},
+  {"id": 4, "nome": "Ana Pereira", "cpf": "55566677788", "idade": 41, "cidade": "Ribeirão Preto", "renda": 6200.0, "synthetic": 0},
+  {"id": 5, "nome": "Rafael Oliveira", "cpf": "22233344455", "idade": 30, "cidade": "Sorocaba", "renda": 4100.0, "synthetic": 0}
+]
