@@ -1,6 +1,6 @@
 # Projeto Máscara Sintética 
 
-Aplicação leve (Flask + SQLite) para **mascarar dados sensíveis** e **gerar dados sintéticos** que preservam padrões estatísticos dos dados originais, ajudando a proteger informações pessoais e permitindo uso seguro em testes, estudos e protótipos.
+Aplicação (Flask + SQLite) para **mascarar dados sensíveis** e **gerar dados sintéticos** que preservam padrões estatísticos dos dados originais, ajudando a proteger informações pessoais e permitindo uso seguro em testes, estudos e protótipos.
 
 ---
 
@@ -88,66 +88,60 @@ mascara-sintetica/
 
 #  Quickstart (Passo a Passo)
 
-1. Clone o projeto  
+### 1. Clone o projeto
 ```cmd
 git clone <link-do-repo>
 ```
 
-2. Entre no diretório  
+### 2. Entre no diretório
 ```cmd
 cd mascara-sintetica
 ```
 
-3. recriar e reativar o ambiente virtual na sua maquina
+### 3. Recriar e reativar o ambiente virtual na sua máquina
 
-   3.1 Apagar a venv existente  
-   Dentro da pasta do projeto, execute:
-
+#### 3.1 Apagar a venv existente
+*Dentro da pasta do projeto, execute:*
 ```cmd
 rmdir /s /q venv
 ```
-Ou apague manualmente a pasta venv.
+*Ou apague manualmente a pasta `venv`.*
 
-   3.2 Desativar o virtualenv antigo  
+#### 3.2 Desativar o virtualenv antigo
 ```cmd
 deactivate
 ```
 
-
-  3.3 Criar uma nova virtualenv
+#### 3.3 Criar uma nova virtualenv
 ```cmd
 python -m venv venv
 ```
 
-
-3.4 Ativar a virtualenv
+#### 3.4 Ativar a virtualenv
 ```cmd
 venv\Scripts\activate
 ```
+> **Nota:** Você deve ver `(venv)` no início da linha.
 
-#Você deve ver o (venv) no início da linha.
+### 4. Instalar as dependências
 
-
-4 Instalar as dependências
-
-4.1 Atualizar pip, setuptools e wheel 
+#### 4.1 Atualizar pip, setuptools e wheel
 ```cmd
 python -m pip install --upgrade pip setuptools wheel
 ```
 
-
-4.2 Instalar todas as dependências listadas no requirements.txt
+#### 4.2 Instalar todas as dependências listadas no requirements.txt
 ```cmd
 python -m pip install -r requirements.txt
 ```
 
-5. Execute o projeto  
+### 5. Execute o projeto
 ```cmd
 python app.py
 ```
 
-6. Acesse no navegador  
-```cmd
+### 6. Acesse no navegador
+```
 http://127.0.0.1:5000/
 ```
 
