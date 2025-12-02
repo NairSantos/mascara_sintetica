@@ -1,28 +1,78 @@
-# Máscara Sintética (Synthetic Masker)
+# Projeto Máscara Sintética 
 
-> Projeto simples para gerar e mascarar dados sintéticos.
-
-Uma aplicação leve (Flask + SQLite) que importa um `seed.json`, salva em banco, treina um modelo estatístico simples e gera registros sintéticos parecidos com os reais. Útil para testes, ensino e experimentos com preservação de privacidade.
+Aplicação leve (Flask + SQLite) para **mascarar dados sensíveis** e **gerar dados sintéticos** que preservam padrões estatísticos dos dados originais, ajudando a proteger informações pessoais e permitindo uso seguro em testes, estudos e protótipos.
 
 ---
 
-## Funcionalidades principais
-- Importa um `data/seed.json` com registros iniciais.
-- Persiste em `data.db` (SQLite).
-- Treina um modelo simples (Gaussian Mixture) para **idade** e **renda**.
-- Gera registros sintéticos coerentes (nome, CPF formatado, idade, cidade, renda).
-- Endpoint para **mascarar CPFs** reais (substituir por sintéticos).
-- Exporta registros sintéticos para `synthetics_export.csv`.
-- Interface web mínima para operações (botões para importar, treinar, gerar, exportar, resetar).
+##  Ideia Geral
+
+O objetivo do projeto é criar um sistema capaz de:
+
+- **Mascarar dados sensíveis** (nome, CPF, renda, idade etc.);
+- **Gerar registros sintéticos realistas**, mas não rastreáveis ao indivíduo original;
+- Permitir visualização e exportação via **interface web simples**, feita sem frameworks pesados.
+
+A proposta é proteger informações pessoais e facilitar experimentos envolvendo privacidade.
 
 ---
 
-## Aviso importante
-- Faça backup do `data.db` antes de operações destrutivas (reset).
+##  Planejamento do Projeto
+
+O sistema possui três camadas principais:
+
+### 1. Front-end (Interface do Usuário)
+
+- Interface em **HTML, CSS e JavaScript puro**;
+- Botões para:
+  - Importar seed.json;
+  - Treinar modelo;
+  - Gerar registros sintéticos;
+  - Exportar dados;
+  - Mascarar CPFs reais;
+  - Resetar banco;
+- Tabela com destaque para registros sintéticos.
+
+### 2. Back-end (API e Banco de Dados)
+
+- API em **Python (Flask)**;
+- Banco **SQLite (`data.db`)**;
+- Rotas REST para manipulação dos dados;
+- Armazenamento do modelo (`synth_model.joblib`).
+
+### 3. Geração de Dados Sintéticos
+
+- Modelo estatístico com **Gaussian Mixture (scikit-learn)**;
+- Aprendizado de padrões de idade e renda;
+- Uso opcional de **Faker** para nomes, cidades e CPFs falsos.
 
 ---
 
-## Estrutura do projeto
+##  Tecnologias Utilizadas
+
+| Camada | Tecnologias |
+|--------|-------------|
+| **Front-end** | HTML, CSS, JavaScript |
+| **Back-end** | Python (Flask) |
+| **Banco de Dados** | SQLite |
+| **Machine Learning** | scikit-learn, numpy, pandas |
+| **Geração de dados falsos** | Faker |
+
+---
+
+#  Funcionalidades Principais
+
+- Importação de registros via `data/seed.json`;
+- Persistência em `data.db`;
+- Treinamento de modelo estatístico;
+- Geração de dados sintéticos coerentes;
+- Mascaramento de CPFs reais;
+- Exportação para `synthetics_export.csv`;
+- Interface web com botões de ação.
+
+---
+
+#  Estrutura do Projeto
+
 ```
 mascara-sintetica/
 ├─ data/
@@ -36,61 +86,64 @@ mascara-sintetica/
 
 ---
 
-## Quickstart (passo a passo)
+#  Quickstart (Passo a Passo)
 
-1. De git clone neste projeto
-2. Descompacte o projeto
-3.  Abra o terminal e entre na pasta do projeto:
-```powershell
-cd na pasta respectiva
+1. Clone o projeto  
+```bash
+git clone <link-do-repo>
 ```
 
-2. Crie e ative o ambiente virtual:
+2. Entre no diretório  
+```bash
+cd mascara-sintetica
+```
+
+3. Crie e ative o ambiente virtual  
 ```powershell
 python -m venv venv
-# cmd:
 venv\Scripts\activate.bat
-
 ```
 
-3. Atualize pip e instale dependências:
+4. Instale dependências  
 ```bash
 python -m pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
 ```
 
-4. Inicie a aplicação:
+5. Execute o projeto  
 ```bash
 python app.py
 ```
 
-5. Abra no navegador:
+6. Acesse no navegador  
 ```
 http://127.0.0.1:5000/
 ```
 
-> Se tiver problemas com `numpy` / `scikit-learn` no Windows, considerar usar **Miniconda** (conda cria ambientes com dependências binárias prontas).
+---
+
+#  Endpoints da API
+
+| Método | Rota | Função |
+|-------|------|--------|
+| GET | `/` | Interface web |
+| POST | `/import_seed` | Importar seed.json |
+| GET | `/users` | Listar usuários |
+| POST | `/users` | Criar usuário |
+| PUT | `/users/<id>` | Atualizar usuário |
+| DELETE | `/users/<id>` | Deletar usuário |
+| POST | `/train` | Treinar modelo |
+| POST | `/generate` | Gerar sintéticos |
+| POST | `/mask_cpfs` | Mascarar CPFs |
+| GET | `/export_synthetics` | Exportar CSV |
+| POST | `/reset_db` | Resetar banco |
 
 ---
 
-## Endpoints (API)
-- `GET /` — interface web.
-- `POST /import_seed` — importa `data/seed.json` para o banco.
-- `GET /users` — lista todos os usuários (JSON).
-- `POST /users` — cria novo usuário (JSON body).
-- `PUT /users/<id>` — atualiza usuário.
-- `DELETE /users/<id>` — deleta usuário.
-- `POST /train` — treina modelo (gera `synth_model.joblib`).
-- `POST /generate` — gera registros sintéticos (body: `{"n": <numero>}`).
-- `POST /mask_cpfs` — substitui CPFs reais por CPFs sintéticos (marca como `synthetic=1`).
-- `GET /export_synthetics` — exporta registros sintéticos para `synthetics_export.csv`.
-- `POST /reset_db` — reseta (apaga) o banco local `data.db` e recria a tabela.
+#  Banco de Dados
 
----
+Tabela `users`:
 
-## Banco de dados
-- Arquivo: `data.db` (SQLite).
-- Tabela `users` (esquema):
 ```sql
 id INTEGER PRIMARY KEY,
 nome TEXT,
@@ -100,22 +153,25 @@ cidade TEXT,
 renda REAL,
 synthetic INTEGER DEFAULT 0
 ```
-- `synthetic = 0` → registro original; `synthetic = 1` → registro gerado/mascarado.
+
+- `synthetic = 0` → dado original  
+- `synthetic = 1` → dado sintético
 
 ---
 
-## Exemplo rápido de uso (via UI)
-1. `Importar seed.json` → popula o banco.  
-2. `Treinar modelo` → aprende padrões.  
-3. `Gerar 5 sintéticos` → cria registros falsos (marcados).  
-4. `Exportar sintéticos` → gera `synthetics_export.csv`.  
-5. `Mascarar CPFs` → substitui CPFs reais por sintéticos (opcional).  
-6. `Resetar DB` → cuidado: apaga tudo.
+#  Exemplo de Uso pela Interface
+
+1. Clique em **Importar Seed**  
+2. Clique em **Treinar Modelo**  
+3. Clique em **Gerar Sintéticos**  
+4. Clique em **Exportar**  
+5. Clique em **Mascarar CPFs** (opcional)  
+6. Clique em **Resetar DB** (cuidado!)  
 
 ---
 
-## Arquivo seed.json de exemplo
-Coloque em `data/seed.json` com um array de objetos. Exemplo mínimo:
+#  Exemplo de seed.json
+
 ```json
 [
   {"id": 1, "nome": "Lucas Silva", "cpf": "12345678909", "idade": 28, "cidade": "São Paulo", "renda": 3500.0, "synthetic": 0},
@@ -124,13 +180,15 @@ Coloque em `data/seed.json` com um array de objetos. Exemplo mínimo:
   {"id": 4, "nome": "Ana Pereira", "cpf": "55566677788", "idade": 41, "cidade": "Ribeirão Preto", "renda": 6200.0, "synthetic": 0},
   {"id": 5, "nome": "Matheus Oliveira", "cpf": "22233344455", "idade": 30, "cidade": "Sorocaba", "renda": 4100.0, "synthetic": 0}
 ]
-
 ```
 
 ---
-##  Contribuição
-- Nair Santos de Sousa;
-- Marcela Aparecida Almeida;
-- Raissa Santos Ramos.
+
+#  Contribuição
+
+- **Nair Santos de Sousa**  
+- **Marcela Aparecida Almeida**  
+- **Raissa Santos Ramos**
+
 
 ---
