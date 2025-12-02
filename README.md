@@ -101,12 +101,12 @@ cd mascara-sintetica
 3. Crie e ative o ambiente virtual  
 ```powershell
 python -m venv venv
-venv\Scripts\activate.bat
+venv\Scripts\activate
 ```
 
 4. Instale dependências  
 ```bash
-python -m pip install --upgrade pip setuptools wheel
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
