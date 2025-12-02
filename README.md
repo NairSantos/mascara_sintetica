@@ -100,6 +100,8 @@ cd mascara-sintetica
 
 3. Crie e ative o ambiente virtual  
 ```powershell
+rmdir /s /q venv
+deactivate  
 python -m venv venv
 venv\Scripts\activate
 ```
